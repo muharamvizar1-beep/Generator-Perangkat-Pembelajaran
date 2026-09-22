@@ -1,23 +1,11 @@
-CHECKLIST DEPLOY V5
+CHECKLIST V6
 
-1. GitHub harus berisi:
-   api/
-   lib/
-   public/
-   .env.example
-   .gitignore
-   index.html (boleh ada; Vercel akan memakai aplikasi Express)
-   package.json
-   server.mjs
-   vercel.json
-   README.md
-
-2. Di Vercel > Environment Variables:
-   GEMINI_API_KEY = [API key dari Google AI Studio]
-   GEMINI_MODEL = gemini-3.8-flash   (opsional)
-
-3. Jangan masukkan OPENAI_API_KEY / OPENAI_MODEL lagi.
-
-4. Setelah menyimpan environment variable, deploy ulang.
-
-5. Buka URL Vercel, bukan file public/index.html langsung.
+1. GitHub berisi index.html, api/, lib/, package.json, vercel.json.
+2. Jangan masukkan .env berisi API key ke GitHub.
+3. Vercel Project: Root Directory ./
+4. Application Preset boleh Other/Auto jika ditawarkan; V6 tidak membutuhkan Express.
+5. Environment Variables: GEMINI_API_KEY dan GEMINI_MODEL=gemini-3.8-flash.
+6. PORT tidak diperlukan di Vercel.
+7. Deploy.
+8. Buka URL deployment.
+9. Tes Generate AI.
