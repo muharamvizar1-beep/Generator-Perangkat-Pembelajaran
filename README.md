@@ -1,40 +1,76 @@
-# Generator Perangkat Pembelajaran AI Online — V4
+# Generator Perangkat Pembelajaran AI Online — V5
 
-Versi ini adalah aplikasi web **berbasis AI**. Form dibuat mendetail agar guru dapat memasukkan identitas, NIP/NUPTK, Elemen, CP, TP, ATP, materi, desain pembelajaran, dan minggu efektif. AI menghasilkan:
+Generator perangkat pembelajaran berbasis AI untuk guru Indonesia. Versi ini menggunakan **Gemini API** melalui backend/server-side sehingga API key tidak ditaruh di browser.
 
-- Lembar Pengesahan setelah cover
-- Identitas, Elemen, CP, TP, ATP
-- PROTA dan PROMES berdasarkan data minggu efektif + JP/minggu
-- Pengalaman Pembelajaran per pertemuan dengan AWAL, INTI, MEMAHAMI, MENGAPLIKASIKAN (proses mencari solusi, identifikasi masalah, analisis penyebab, penerapan solusi), MEREFLEKSI, PENUTUP
-- LKPD otomatis berisi kasus/tugas/soal setiap pertemuan
-- Asesmen awal, proses, akhir
+## Isi yang dihasilkan
+- Cover
+- Lembar Pengesahan (langsung setelah cover)
+- Identitas + NIP/NUPTK
+- Elemen, CP, TP, ATP
+- PROTA berdasarkan ATP, alokasi JP, semester, dan minggu efektif pada form
+- PROMES berdasarkan bulan dan minggu efektif pada form
+- Pengalaman Pembelajaran tiap pertemuan: AWAL, INTI, MEMAHAMI, MENGAPLIKASIKAN (proses mencari solusi, identifikasi masalah, analisis penyebab, penerapan solusi), MEREFLEKSI, PENUTUP
+- LKPD otomatis per pertemuan lengkap dengan kasus, tugas, soal, produk, dan kriteria keberhasilan
+- Asesmen Awal, Proses, dan Akhir
 - Rubrik penilaian skala 1–4 dengan deskriptor konkret
-- 50 soal PG A–D + kunci + indikator + level kognitif
-- 25 soal essai + pedoman jawaban + indikator + level kognitif
-- Materi Ajar Rinci di lembar akhir
+- 50 soal pilihan ganda A–D + kunci dan indikator
+- 25 soal essai + pedoman jawaban dan indikator
+- Materi Ajar Rinci di bagian akhir sesuai Elemen, CP, TP, ATP, materi, dan konteks form
 - Cetak/Simpan PDF melalui dialog print browser
-- Export Word asli `.docx`
-- Simpan/Muat form dan simpan hasil JSON
+- Export Word `.docx`
+- Simpan/Muat Form dan hasil JSON
 
-## Menjalankan lokal
+## Format dokumen
+- Judul: Times New Roman 14 pt, bold, center
+- Subbab/sub-subbagian: Times New Roman 12 pt, bold, justified
+- Isi: Times New Roman 12 pt, justified
+- Tabel memakai Times New Roman
 
-1. Salin `.env.example` menjadi `.env`.
-2. Isi `OPENAI_API_KEY`.
-3. Jalankan `npm install`.
-4. Jalankan `npm start`.
-5. Buka `http://localhost:3000`.
+## A. Deploy online gratis dengan Vercel + Gemini Free Tier
 
-## Deploy online (Vercel)
+Google menyediakan Gemini API Free Tier untuk model tertentu; kuota/rate limit tetap berlaku. V5 default memakai model `gemini-3.8-flash` yang pada halaman harga resmi saat ini tercantum sebagai tersedia pada Free Tier. Periksa kuota terbaru di Google AI Studio sebelum penggunaan banyak.
 
-Upload folder ini ke GitHub lalu import repository ke Vercel. Atur Environment Variable:
+1. Buat API key di Google AI Studio: https://aistudio.google.com/apikey
+2. Upload isi folder V5 ke repository GitHub Anda.
+3. Di Vercel, import repository GitHub.
+4. Pada Environment Variables, tambahkan:
+   - `GEMINI_API_KEY` = API key dari Google AI Studio
+   - `GEMINI_MODEL` = `gemini-3.8-flash` (opsional, karena sudah menjadi default)
+   - `PORT` tidak perlu diisi untuk deployment Vercel.
+5. Pilih environment Production dan Preview untuk `GEMINI_API_KEY` jika ingin dipakai pada keduanya.
+6. Klik Deploy.
+7. Setelah deploy, buka URL Vercel yang diberikan.
 
-`OPENAI_API_KEY` = API key proyek Anda
+**Jangan upload `.env` ke GitHub.** Hanya `.env.example` yang boleh masuk repository.
 
-Opsional:
-`OPENAI_MODEL` = `gpt-5.6-luna`
+## B. Menjalankan lokal (opsional)
 
-Aplikasi memakai endpoint server-side sehingga API key tidak ditaruh di browser.
+Buka CMD di folder project, lalu:
 
-## Catatan keamanan
+```bash
+npm install
+```
 
-Jangan memasukkan API key ke `index.html` atau membagikannya kepada pengguna. Permintaan AI dilakukan dari backend/serverless function.
+Salin `.env.example` menjadi `.env`, lalu isi:
+
+```env
+GEMINI_API_KEY=API_KEY_ANDA
+GEMINI_MODEL=gemini-3.8-flash
+PORT=3000
+```
+
+Kemudian:
+
+```bash
+npm start
+```
+
+Buka `http://localhost:3000`.
+
+## Catatan kuota
+
+Satu kali Generate membuat rancangan inti dan bank soal melalui beberapa panggilan ke Gemini. Jika kuota/rate limit Free Tier tercapai, tunggu lalu coba lagi. Generator memeriksa agar bank soal harus berjumlah tepat 50 PG dan 25 essai.
+
+## Keamanan
+
+API key hanya dibaca oleh backend dari environment variable `GEMINI_API_KEY`. Jangan menaruh API key di `index.html`, JavaScript frontend, atau file yang di-commit ke GitHub.
